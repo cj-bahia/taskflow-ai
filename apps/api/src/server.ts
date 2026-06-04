@@ -1,19 +1,28 @@
-import express, { Request, Response } from 'express'; // Importando express
+// =================================================================
+// server.ts
+// Ponto de entrada da aplicação - cria e configura o servidor HTTP
+// =================================================================
 
-const app = express(); // Criando uma instância do express
-const PORT = process.env.PORT || 3000; // Definindo a porta que o servidor vai usar
+import 'dotenv/config'; // deve ser o primeiro import - carrega o .env
+import express, { Request, Response } from 'express';
 
-app.use(express.json()); // Habilitando o uso de JSON no corpo das requisições
+const app = express();                  // instância principal do Express
+const PORT = process.env.PORT || 3000;  // porta lida do .env com fallback para 3000
 
-app.get('/health', (req: Request, res: Response) => { // Definindo uma rota para o endpoint /health
-  res.status(200).json({ // Respondendo com um status 200 e um JSON
+app.use(express.json());                // permite receber JSON no corpo das requisições
+
+// rota de health check - usada para verificar se o servidor está online
+// não faz nenhuma lógica de negócio, só confirma que a APÌ está respondendo
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({
     status:'ok',
     message: 'TaskFlow AI API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 })
 
-app.listen(PORT, () => { // Iniciando o servidor
+// inicia o servidor e fica "ouvindo" requisições na porta definida
+app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📋 Health check: http://localhost:${PORT}/health`);
 })

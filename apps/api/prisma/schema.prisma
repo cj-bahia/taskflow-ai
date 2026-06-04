@@ -1,0 +1,44 @@
+// Define como o Prisma vai gerar o client (o objeto que você usa no código)
+generator client {
+  provider = "prisma-client-js"
+}
+
+//Define qual banco de dados usar
+datasource db {
+  provider  = "postgresql"          // tipo do banco
+}
+
+// Enum = lista de valores fixos permitidos para o campo status
+enum Status {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+// Enum = lista de valores fixos permitidos para o campo priority
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+//
+model User {
+  id        String    @id @default(uuid())  // chave primária, gerada automaticamente como UUID
+  email     String    @unique               // não pode ter dois users com o mesmo email
+  password  String                          // senha (vai ser salva com hash, não texto puro)
+  createdAt DateTime  @default(now())       // preenchido automaticamente com a data/hora atual
+  tasks     Task[]                          // relação: um user pode ter muitas tasks
+}
+
+model Task {
+  id          String    @id @default(uuid())                            // chave primária UUID
+  title       String                                                    // obrigatório
+  description String?                                                   // opcional ( ? = nullable )
+  status      Status    @default(TODO)                                  // usa o enum Status, padrão é TODO
+  priority    Priority  @default(MEDIUM)                                // usa o enum Priority, padrão é MEDIUM
+  userId      String                                                    // chave estrangeira - aponta para o User
+  createdAt   DateTime  @default(now())                                 // preenchido automaticamente
+  updatedAt   DateTime  @updatedAt                                      // atualizado automaticamente a cada save
+  user        User      @relation(fields: [userId], references: [id])   // define a relação com User
+}
