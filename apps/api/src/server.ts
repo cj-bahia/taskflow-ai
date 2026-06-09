@@ -5,11 +5,13 @@
 
 import 'dotenv/config'; // deve ser o primeiro import - carrega o .env
 import express, { Request, Response } from 'express';
+import taskRoutes from './infra/routes/taskRoutes';
 
 const app = express();                  // instância principal do Express
 const PORT = process.env.PORT || 3000;  // porta lida do .env com fallback para 3000
 
 app.use(express.json());                // permite receber JSON no corpo das requisições
+app.use('/tasks', taskRoutes);          // rota de tasks
 
 // rota de health check - usada para verificar se o servidor está online
 // não faz nenhuma lógica de negócio, só confirma que a APÌ está respondendo
