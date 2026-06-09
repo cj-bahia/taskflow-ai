@@ -30,7 +30,6 @@ export class TaskController {
       return res.status(201).json(task)
     } catch (error) {
       // 500 — erro inesperado no servidor
-      console.error('CREATE ERROR:', error) //! Teste temporário
       res.status(500).json({ error: 'Internal server error' })
     }
   }
